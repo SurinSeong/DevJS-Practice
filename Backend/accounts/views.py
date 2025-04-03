@@ -95,6 +95,73 @@ class GoogleLoginView(APIView):
         return Response(tokens, status=200)
 
 
+# 깃허브 로그인 관련
+class GithubLoginView(APIView):
+    def post(self, request):
+        code = request.data.get("code")
+        redirect_uri = "http://localhost:5173/github/callback"
+
+        token_res = requests.post("https://github.com/login/oauth/access_token", data={
+            "client_id": settings.GITHUB_CLIENT_ID,
+            "client_secret": settings.GITHUB_CLIENT_SECRET,
+            "code": code,
+            "redirect_uri": redirect_uri,
+        }, headers={"Accept": "application/json"})
+
+        token_data = token_res.json()
+        access_token = token_data.get("access_token")
+
+        user_res = requests.get("https://api.github.com/user", headers={
+            "Authorization": f"token {access_token}"
+        })
+        user_data = user_res.json()
+
+        github_id = str(user_data.get("id"))
+        email = user_data.get("email") or f"github_{github_id}@example.com"
+
+        user = get_or_create_social_user("github", github_id, email)
+        tokens = generate_jwt_for_user(user)
+
+        return Response(tokens)
+
+
+# 네이버 로그인 관련
+class NaverLoginView(APIView):
+    def post(self, request):
+        code = request.data.get("code")
+        state = request.data.get("state")
+        redirect_uri = "http://localhost:5173/naver/callback"
+
+        # 1. 토큰 요청
+        token_res = requests.post("https://nid.naver.com/oauth2.0/token", params={
+            "grant_type": "authorization_code",
+            "client_id": settings.NAVER_CLIENT_ID,
+            "client_secret": settings.NAVER_CLIENT_SECRET,
+            "code": code,
+            "state": state,
+            "redirect_uri": redirect_uri
+        })
+
+        token_json = token_res.json()
+        access_token = token_json.get("access_token")
+
+        # 2. 사용자 정보 요청
+        user_res = requests.get("https://openapi.naver.com/v1/nid/me", headers={
+            "Authorization": f"Bearer {access_token}"
+        })
+        user_data = user_res.json()
+        profile = user_data.get("response", {})
+
+        naver_id = profile.get("id")
+        email = profile.get("email") or f"naver_{naver_id}@example.com"
+
+        user = get_or_create_social_user("naver", naver_id, email)
+        tokens = generate_jwt_for_user(user)
+
+        return Response(tokens)
+
+
+# 로그인된 유저 정보
 class UserInfoView(APIView):
     permission_classes = [IsAuthenticated]  # JWT 인증 필요
 
