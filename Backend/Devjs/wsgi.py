@@ -1,5 +1,5 @@
 """
-WSGI config for Devjs project.
+WSGI config for devjs project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Devjs.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'devjs.settings')
 
 application = get_wsgi_application()

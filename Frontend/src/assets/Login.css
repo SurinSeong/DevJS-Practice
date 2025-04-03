@@ -1,0 +1,85 @@
+/* Login.css */
+
+
+.logo {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: rgb(255, 255, 255);
+}
+
+.login-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-box h2 {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+.social-button-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #f1f1f1;
+  color: white;
+}
+
+.social-button img {
+  height: 24px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+.kakao {
+  background-color: #FEE500;
+  color: white;
+}
+
+.kakao img {
+  height: 24px;
+}
+
+.naver {
+  background-color: #03c75a;
+  color: white;
+}
+
+.github {
+  background-color: #24292e;
+  color: white;
+}
+
+.github img {
+  height: 24px;
+}
+
+.github span {
+  font-size: 1rem;
+}
+
+

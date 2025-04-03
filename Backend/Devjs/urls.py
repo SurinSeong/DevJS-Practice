@@ -1,5 +1,5 @@
 """
-URL configuration for Devjs project.
+URL configuration for devjs project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -19,14 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    path('api/', include('ai_models.urls')),
-    path('api/feedback/', include('feedback.urls')),
-    
-    path('api/auth/', include('dj_rest_auth.urls')),    # 일반 로그인, 로그아웃, 비밀번호 재설정 등
-    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),    # 회윈가입
-    path('api/auth/social/', include('allauth.socialaccount.urls')),    # 소셜 로그인 (Google, Kakao 등)
-    
-    path('coverletters/', include('coverletters.urls')),
-    
+    path('api/', include('accounts.urls')),    # 로그인 관련
 ]
