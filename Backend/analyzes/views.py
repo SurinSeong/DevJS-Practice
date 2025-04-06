@@ -6,7 +6,6 @@ from .models import Analysis
 from .serializers import AnalysisSerializer
 
 from coverletters.models import CoverLetter
-from jobdescriptions.model import JobDescription
 from feedbacks.models import Feedback, RecommendationSentence
 from model_server.client import request_analysis
 
