@@ -6,10 +6,11 @@
 
 ```
 
-fastapi-server/
+model-server/
 ├── main.py               ← FastAPI 엔트리포인트
 ├── models.py             ← Pydantic 데이터 구조
-└── analyze.py            ← 유사도 분석 + 추천 생성 함수
+├── analyze.py            ← 유사도 분석 + 추천 생성 함수
+└── client.py             ← 여기서 request_analysis 함수 정의
 
 ```
 
