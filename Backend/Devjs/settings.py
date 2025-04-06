@@ -40,6 +40,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # app
     'accounts',
+    'analyzes',
+    'feedbacks',
 
     # third-party libraries
     'rest_framework',
