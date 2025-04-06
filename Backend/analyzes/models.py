@@ -23,4 +23,4 @@ class Analysis(models.Model):
     error_message = models.TextField(null=True, blank=True)
     
     def __str__(self):
-        return f'Analysis for CoverLetter #{self.cover_letter.pk} - {self.status}'
+        return f'Analysis for CoverLetter #{self.cover_letter.id} - {self.status}'
