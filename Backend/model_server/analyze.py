@@ -2,7 +2,7 @@ from typing import List
 from models import FeedbackItem
 from sentence_transformers import SentenceTransformer, util
 
-model = SentenceTransformer('BM-K/KoSimCSE-roberta')
+model = SentenceTransformer('jhgan/ko-sbert-nli')
 
 def split_sentence(text: str) -> List[str]:
     return [s.strip() for s in text.split('.') if s.strip()]

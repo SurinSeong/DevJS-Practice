@@ -6,8 +6,9 @@ def request_analysis(analysis_id, cover_letter_text, job_description_text):
     data = {
         'analysis_id': analysis_id,
         'cover_letter': cover_letter_text,
-        'jpb_description': job_description_text
+        'job_description': job_description_text
     }
+    print(data)
     
     try:
         response = requests.post(FASTAPI_URL, json=data)
