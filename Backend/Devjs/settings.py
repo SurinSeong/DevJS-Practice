@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'accounts',
     'analyzes',
     'feedbacks',
+    'coverletters',
+    'jobdescriptions',
 
     # third-party libraries
     'rest_framework',
