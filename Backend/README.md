@@ -95,6 +95,11 @@ Backend/
 - 주요 기능
 
     - `/api/analyzes/` : 분석 요청
+
+        - POST 요청 → 분석 요청 저장 → FastAPI 호출  
+                    ↘ 실패 시 'failed'  
+                    ↘ 성공 시: Feedback + Recommendation 저장 → 분석 완료 처리
+
     - `/api/analyzes/{coverletter_id}/retry/` : 재분석 요청
 
 - 구현 요소
