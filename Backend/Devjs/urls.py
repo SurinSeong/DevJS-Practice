@@ -20,6 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('accounts.urls')),    # 로그인 관련
-    path('analyzes/', include('analyzes.urls')),    # 분석 관련
-    path('feedbacks/', include('feedbacks.urls')),    # 피드백 관련
+    
 ]
