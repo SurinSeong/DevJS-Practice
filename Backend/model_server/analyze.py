@@ -1,9 +1,11 @@
+import re
+from typing import Tuple
 from typing import List
+
 from models import FeedbackItem
 from sentence_transformers import SentenceTransformer, util
 from transformers import pipeline
-import json
-import re
+
 
 # 1. 모델 로딩 (FastAPI 시작 시 1회)
 model = SentenceTransformer('jhgan/ko-sbert-nli')
@@ -16,30 +18,25 @@ def split_sentences(text: str) -> List[str]:
 
 
 # 3. 생성된 LLM 결과에서 추천 문장 + 이유 추출
-def parse_generated_result(text: str) -> tuple[str, str]:
+
+def parse_generated_result(text: str) -> Tuple[str, str]:
     recommendation, reason = '', ''
 
     try:
-        # ✅ LLM 응답 앞뒤 불필요한 텍스트 제거 (JSON 부분만 추출)
-        json_str_match = re.search(r'\{.*\}', text, re.DOTALL)
-        if not json_str_match:
-            return recommendation, reason  # JSON 구조가 없으면 그대로 반환
+        rec_match = re.search(r"추천 문장[:：]\s*(.+)", text)
+        reason_match = re.search(r"이유[:：]\s*(.+)", text)
 
-        json_str = json_str_match.group(0)
-
-        # ✅ 작은 따옴표 → 큰 따옴표로 바꿔야 json.loads가 잘 읽음
-        json_str = json_str.replace("'", '"')
-
-        # ✅ 실제 JSON 파싱
-        parsed = json.loads(json_str)
-
-        recommendation = parsed.get("recommendation_sentence", "").strip()
-        reason = parsed.get("reason", "").strip()
+        if rec_match:
+            recommendation = rec_match.group(1).strip()
+        if reason_match:
+            reason = reason_match.group(1).strip()
 
     except Exception as e:
-        print(f"[파싱 오류] {e}")
-    
+        print("[❌ 파싱 오류]", e)
+        print("[📄 원본 응답]", text)
+
     return recommendation, reason
+
 
 
 
@@ -73,15 +70,12 @@ def analyze_similarity(cover_letter: str, job_description: str) -> List[Feedback
                     [자기소개서 문장]
                     {sentence}
                     
-                    '자기소개서 문장'을 '직무 설명'과 '지원' 목적에 맞지 않으면, 연관되도록 고치고, 그 이유도 설명해주세요.
+                    이 문장이 직무에 적합하지 않다면, 더 적절한 문장으로 고쳐주시고 그 이유도 설명해주세요.
 
-                    [FORMAT]
-                    {
-                        "recommendation_sentence": "고친 문장 내용",
-                        "reason": "고친 이유 설명"
-                    }
+                    다음 형식에 맞춰서 답변해주세요:
 
-                    위의 FORMAT에 맞춰서 JSON 형태로 정확히 답변해주세요.
+                    추천 문장:
+                    이유:
                     """
         
             # 위의 추천 문장 받는 포맷을 문장 마다 생성할 수 있도록 리스트에 넣어주기
@@ -103,6 +97,7 @@ def analyze_similarity(cover_letter: str, job_description: str) -> List[Feedback
         for idx, result in zip(weak_indexes, results):
             # generator(...) 결과에서 텍스트 추출
             gen_text = result[0]["generated_text"]
+            print(gen_text)
 
             # JSON 형태로 파싱
             rec, reason = parse_generated_result(gen_text)
