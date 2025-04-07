@@ -13,4 +13,6 @@ def analyze(request: AnalyzeRequest):
         request.job_description
     )
     
+    print(f'[분석 완료] 총 {len(feedbacks)}개의 문장 분석됨.')
+    
     return {'feedbacks': feedbacks}

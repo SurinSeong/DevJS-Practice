@@ -11,7 +11,7 @@ def request_analysis(analysis_id, cover_letter_text, job_description_text):
     print(data)
     
     try:
-        response = requests.post(FASTAPI_URL, json=data)
+        response = requests.post(FASTAPI_URL, json=data)   # timeout
         response.raise_for_status()
         return response.json()
     
