@@ -1,0 +1,102 @@
+table CustomUser {
+provider varchar [note: "primary_key : False<br>max_length : 20<br>nullable : True<br>blank : True"]
+social_id varchar [note: "primary_key : False<br>max_length : 100<br>nullable : True<br>blank : True"]
+password varchar [note: "primary_key : False<br>max_length : 128<br>nullable : False<br>blank : False"]
+last_login datetime [note: "primary_key : False<br>nullable : True<br>blank : True"]
+is_superuser boolean [note: "primary_key : False<br>nullable : False<br>blank : False"]
+username varchar [note: "primary_key : False<br>max_length : 150<br>nullable : False<br>blank : False"]
+first_name varchar [note: "primary_key : False<br>max_length : 150<br>nullable : False<br>blank : True"]
+last_name varchar [note: "primary_key : False<br>max_length : 150<br>nullable : False<br>blank : True"]
+email email [note: "primary_key : False<br>max_length : 254<br>nullable : False<br>blank : True"]
+is_staff boolean [note: "primary_key : False<br>nullable : False<br>blank : False"]
+is_active boolean [note: "primary_key : False<br>nullable : False<br>blank : False"]
+date_joined datetime [note: "primary_key : False<br>nullable : False<br>blank : False"]
+groups many_to_many
+user_permissions many_to_many
+id big_int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table Analysis {
+cover_letter foreign_key
+job_description foreign_key
+status varchar [note: "primary_key : False<br>max_length : 20<br>nullable : False<br>blank : False<br>choices : [('pending', 'Pending'), ('in_progress', 'In Progress'), ('done', 'Done'), ('failed', 'Failed')]"]
+requested_at datetime [note: "primary_key : False<br>nullable : False<br>blank : False"]
+completed_at datetime [note: "primary_key : False<br>nullable : True<br>blank : True"]
+error_message text [note: "primary_key : False<br>nullable : True<br>blank : True"]
+id big_int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table Feedback {
+analysis foreign_key
+original_sentence text [note: "primary_key : False<br>nullable : False<br>blank : False"]
+similarity_score float [note: "primary_key : False<br>nullable : False<br>blank : False"]
+is_weak boolean [note: "primary_key : False<br>nullable : False<br>blank : False"]
+id big_int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table RecommendationSentence {
+feedback one_to_one
+content text [note: "primary_key : False<br>nullable : False<br>blank : False"]
+reason text [note: "primary_key : False<br>nullable : True<br>blank : True"]
+id big_int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table CoverLetter {
+job_description foreign_key
+content text [note: "primary_key : False<br>nullable : False<br>blank : False"]
+id big_int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table JobDescription {
+title varchar [note: "primary_key : False<br>max_length : 100<br>nullable : False<br>blank : False"]
+content text [note: "primary_key : False<br>nullable : False<br>blank : False"]
+id big_int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table LogEntry {
+action_time datetime [note: "primary_key : False<br>nullable : False<br>blank : False"]
+user foreign_key
+content_type foreign_key
+object_id text [note: "primary_key : False<br>nullable : True<br>blank : True"]
+object_repr varchar [note: "primary_key : False<br>max_length : 200<br>nullable : False<br>blank : False"]
+action_flag positive_small_int [note: "primary_key : False<br>nullable : False<br>blank : False<br>choices : [(1, 'Addition'), (2, 'Change'), (3, 'Deletion')]"]
+change_message text [note: "primary_key : False<br>nullable : False<br>blank : True"]
+id int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table Permission {
+name varchar [note: "primary_key : False<br>max_length : 255<br>nullable : False<br>blank : False"]
+content_type foreign_key
+codename varchar [note: "primary_key : False<br>max_length : 100<br>nullable : False<br>blank : False"]
+id int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table Group {
+name varchar [note: "primary_key : False<br>max_length : 150<br>nullable : False<br>blank : False"]
+permissions many_to_many
+id int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table ContentType {
+app_label varchar [note: "primary_key : False<br>max_length : 100<br>nullable : False<br>blank : False"]
+model varchar [note: "primary_key : False<br>max_length : 100<br>nullable : False<br>blank : False"]
+id int [note: "primary_key : True<br>nullable : False<br>blank : True"]
+}
+
+table Session {
+session_key varchar [note: "primary_key : True<br>max_length : 40<br>nullable : False<br>blank : False"]
+session_data text [note: "primary_key : False<br>nullable : False<br>blank : False"]
+expire_date datetime [note: "primary_key : False<br>nullable : False<br>blank : False"]
+}
+
+ref: CustomUser.groups > Group.name
+ref: CustomUser.user_permissions > Permission.name
+ref: Analysis.cover_letter > CoverLetter.id
+ref: Analysis.job_description > JobDescription.id
+ref: Feedback.analysis > Analysis.id
+ref: RecommendationSentence.feedback > Feedback.id
+ref: CoverLetter.job_description > JobDescription.id
+ref: LogEntry.user > CustomUser.id
+ref: LogEntry.content_type > ContentType.id
+ref: Permission.content_type > ContentType.id
+ref: Group.permissions > Permission.name
